@@ -52,7 +52,18 @@ def run(verbose: bool = True) -> dict:
         "best_region": min(sustainability.REGION_CARBON, key=sustainability.REGION_CARBON.get),
     }
 
-    md = report.build_report(baseline, optimized, levers, sustainability=sust)
+    md = report.build_report(
+        baseline,
+        optimized,
+        levers,
+        sustainability=sust,
+        inference=r2,
+        efficiency=r1,
+        extensions={
+            "cache_policy": r2.get("cache_policy", {}),
+            "reasoning_budget": r2.get("reasoning_budget", {}),
+        },
+    )
     out_md = os.path.join(ROOT, "outputs", "report.md")
     os.makedirs(os.path.dirname(out_md), exist_ok=True)
     with open(out_md, "w") as f:
